@@ -179,39 +179,44 @@ class ArticleController{
         Article.findOne({_id: req.params.id})
             .then( article =>{
 
-                // check status to prevent double vote
-                if(article.upVotesList.indexOf(`${req.decoded.user_id}`) === -1){
-                    //Update article
-                    article.update({
-                        $push: {
-                            upVotesList: req.decoded.user_id 
-                        }
-                    })
-                    .then( articleupvote =>{
-                        res.status(200).json({
-                            msg: 'Article has been upvoted',
-                            data: articleupvote
+                // check if it's not self - upvote
+                if(article.userId != req.decoded.user_id){
+                    // check status to prevent double vote
+                    if(article.upVotesList.indexOf(`${req.decoded.user_id}`) === -1){
+                        //Update article
+                        article.update({
+                            $push: {
+                                upVotesList: req.decoded.user_id 
+                            }
                         })
-                    })
-                    .catch( error => {
-                        res.status(500).json({ msg: 'ERROR: ',error})
-                    })
-                }else if(article.upVotesList.indexOf(`${req.decoded.user_id}`) !== -1){
-                    //Update article
-                    article.update({
-                        $pull: {
-                            upVotesList: req.decoded.user_id
-                        }
-                    })
-                    .then( articleupvote =>{
-                        res.status(200).json({
-                            msg: 'Upvote cancelled',
-                            data: articleupvote
+                        .then( articleupvote =>{
+                            res.status(200).json({
+                                msg: 'Article has been upvoted',
+                                data: articleupvote
+                            })
                         })
-                    })
-                    .catch( error => {
-                        res.status(500).json({ msg: 'ERROR: ',error})
-                    })
+                        .catch( error => {
+                            res.status(500).json({ msg: 'ERROR: ',error})
+                        })
+                    }else if(article.upVotesList.indexOf(`${req.decoded.user_id}`) !== -1){
+                        //Update article
+                        article.update({
+                            $pull: {
+                                upVotesList: req.decoded.user_id
+                            }
+                        })
+                        .then( articleupvote =>{
+                            res.status(200).json({
+                                msg: 'Upvote cancelled',
+                                data: articleupvote
+                            })
+                        })
+                        .catch( error => {
+                            res.status(500).json({ msg: 'ERROR: ',error})
+                        })
+                    }   
+                }else {
+                   res.status(403).json({ msg: 'You can\'t upvote your own article' }) 
                 }
             })
             .catch( error => {
@@ -224,37 +229,42 @@ class ArticleController{
         Article.findOne({_id: req.params.id})
             .then(article =>{
 
-                // check status to prevent double vote
-                if(article.downVotesList.indexOf(`${req.decoded.user_id}`) === -1){
-                    article.update({
-                        $push: {
-                            downVotesList: req.decoded.user_id 
-                        }
-                    })
-                    .then( articledownvote =>{
-                        res.status(200).json({
-                            msg: 'Articles has been downvoted',
-                            data: articledownvote
+                // check if it's not self - downvote
+                if(article.userId != req.decoded.user_id){
+                    // check status to prevent double vote
+                    if(article.downVotesList.indexOf(`${req.decoded.user_id}`) === -1){
+                        article.update({
+                            $push: {
+                                downVotesList: req.decoded.user_id 
+                            }
                         })
-                    })
-                    .catch( error=>{
-                        res.status(500).json({ msg: 'ERROR: ',error})
-                    })
-                }else if(article.downVotesList.indexOf(`${req.decoded.user_id}`) !== -1){
-                    article.update({
-                        $pull: {
-                            downVotesList: req.decoded.user_id 
-                        }
-                    })
-                    .then( articledownvote =>{
-                        res.status(200).json({
-                            msg: 'Downvote has been cancelled',
-                            data: articledownvote
+                        .then( articledownvote =>{
+                            res.status(200).json({
+                                msg: 'Articles has been downvoted',
+                                data: articledownvote
+                            })
                         })
-                    })
-                    .catch( error=>{
-                        res.status(500).json({ msg: 'ERROR: ',error})
-                    })
+                        .catch( error=>{
+                            res.status(500).json({ msg: 'ERROR: ',error})
+                        })
+                    }else if(article.downVotesList.indexOf(`${req.decoded.user_id}`) !== -1){
+                        article.update({
+                            $pull: {
+                                downVotesList: req.decoded.user_id 
+                            }
+                        })
+                        .then( articledownvote =>{
+                            res.status(200).json({
+                                msg: 'Downvote has been cancelled',
+                                data: articledownvote
+                            })
+                        })
+                        .catch( error=>{
+                            res.status(500).json({ msg: 'ERROR: ',error})
+                        })
+                    }
+                }else{
+                    res.status(404).json({ msg: 'You can\'t downvote your own article'})
                 }
             })
             .catch(error => {
