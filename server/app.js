@@ -14,10 +14,12 @@ app.use(cors());
 //----> Define your routes here
 const UserRouter = require('./routes/UserRouter');
 const ArticleRouter = require('./routes/ArticleRouter');
+const CommentRouter = require('./routes/CommentRouter');
 
 //----> Call your routes here
 app.use('/users',UserRouter);
 app.use('/articles',ArticleRouter);
+app.use('/comments',CommentRouter);
 
 app.get('/',(req,res)=>{
     res.send('OK')

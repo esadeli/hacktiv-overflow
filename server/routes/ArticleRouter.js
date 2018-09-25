@@ -35,6 +35,7 @@ router.post('/details/:id/upvote',IsLogin,(req,res)=>{
     ArticleController.upVoteArticle(req,res);
 })
 
+// downvote articles
 router.post('/details/:id/downvote',IsLogin,(req,res)=>{
     ArticleController.downVoteArticle(req,res);
 })

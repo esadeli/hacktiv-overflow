@@ -3,33 +3,33 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ArticleSchema = new Schema({
-    title : {
+const CommentSchema = new Schema({
+    content : {
         type : String
     },
-    description : {
-        type : String
-    },
-    userId : {
+    userIdComment : {
         type : Schema.Types.ObjectId,
         ref : 'User'
     },
-    commentsList : [{
+    userfullname:{
+        type: String
+    },
+    articleId : {
         type : Schema.Types.ObjectId,
-        ref : 'Comment'
-    }],
-    upVotesList : [{
+        ref : 'Article'
+    },
+    commentUpVotes: [{
         type : Schema.Types.ObjectId,
         ref : 'User'
     }],
-    downVotesList : [{
+    commentDownVotes: [{
         type : Schema.Types.ObjectId,
         ref : 'User'
-    }] 
+    }]
 },{
     timestamps : true
 })
 
-const Article = mongoose.model('Article',ArticleSchema);
+const Comment = mongoose.model('Comment',CommentSchema);
 
-module.exports = Article;
+module.exports = Comment;
