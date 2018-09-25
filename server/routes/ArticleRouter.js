@@ -30,6 +30,16 @@ router.delete('/delete/:id',IsLogin,(req,res)=>{
     ArticleController.deleteOneArticle(req,res);
 })
 
+// upvote articles
+router.post('/details/:id/upvote',IsLogin,(req,res)=>{
+    ArticleController.upVoteArticle(req,res);
+})
+
+router.post('/details/:id/downvote',IsLogin,(req,res)=>{
+    ArticleController.downVoteArticle(req,res);
+})
+
+
 // // get articles by keyword
 // router.post('/search',(req,res)=>{
 //     ArticleController.getArticlesByKeyword(req,res);

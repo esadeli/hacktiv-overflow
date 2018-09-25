@@ -19,14 +19,14 @@ const ArticleSchema = new Schema({
         // type : Schema.Types.ObjectId,
         // ref : 'Comment'
     }],
-    upVoteList : [{
+    upVotesList : [{
         type : Schema.Types.ObjectId,
         ref : 'User'
     }],
-    downVoteList : [{
+    downVotesList : [{
         type : Schema.Types.ObjectId,
         ref : 'User'
-    }]  
+    }] 
 },{
     timestamps : true
 })
