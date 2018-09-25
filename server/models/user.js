@@ -14,7 +14,11 @@ const UserSchema = new Schema({
     },
     password : {
         type : String   
-    }
+    },
+    articlesList : [{
+        type : Schema.Types.ObjectId,
+        ref : 'Article'
+    }]
 },{
     timestamps : true
 })
