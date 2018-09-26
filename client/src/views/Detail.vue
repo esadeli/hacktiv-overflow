@@ -6,9 +6,19 @@
                     <div class="lead">
                         <h4><span class="badge badge-light">{{ articledata.title }}</span></h4>
                         <br/>
+                        <div class="row" v-if= "token !== ''">
+                          <div class="col-md-2">
+                               <button type="button" class="btn btn-success" v-on:click= "upvotearticle()">Upvote</button>
+                               {{ articledata.upVotesList.length }}
+                            </div>
+                            <div class="col-md-3">
+                               <button type="button" class="btn btn-danger" v-on:click= "downvotearticle()">Downvote</button>
+                              {{ articledata.downVotesList.length }}
+                            </div>
+                        </div>
                         <div class=row v-if= "token !== '' && articledata.userId === userid">
                             <hr/>
-                            <div class="col-md-10"></div>
+                            <div class="col-md-9"></div>
                             <div class="col-md-1">
                                 <button type="button" class="btn btn-warning">
                                   <router-link :to="{ name: 'editarticle', params: { id: articledata._id }}">
@@ -101,7 +111,11 @@ export default {
       newcomment: '',
       editcommentstatus: false,
       editcommentid: '',
-      editcommentcontent: ''
+      editcommentcontent: '',
+      upvotearticleid: '',
+      downvotearticleid: '',
+      upvotecommentid: '',
+      downvotecommentid: ''
     }
   },
   methods: {
@@ -205,6 +219,74 @@ export default {
         .catch(error => {
           console.log('ERROR: TEST2', error)
         })
+    },
+    // upvote article
+    upvotearticle () {
+      this.upvotearticleid = this.userid
+      let self = this
+      console.log('User Upvote -->', this.upvotearticleid)
+
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/articles/details/${self.id}/upvote`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(upvote => {
+          // get the updated article
+          axios({
+            method: 'GET',
+            url: `http://localhost:3000/articles/details/${self.id}`
+          })
+            .then(articles => {
+              self.articledata = articles.data.data
+              self.upvotearticleid = ''
+              self.commentslist = articles.data.data.commentsList
+              self.newcomment = ''
+              this.$router.push({ path: `/articles/${self.id}` })
+            })
+            .catch(error => {
+              console.log('ERROR: ', error)
+            })
+        })
+        .catch(error => {
+          console.log('ERROR: ', error)
+        })
+    },
+
+    // downvote article
+    downvotearticle () {
+      this.downvotearticleid = this.userid
+      let self = this
+      console.log('User Downvote -->', this.downvotearticleid)
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/articles/details/${self.id}/downvote`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(downvote => {
+          // get the updated article
+          axios({
+            method: 'GET',
+            url: `http://localhost:3000/articles/details/${self.id}`
+          })
+            .then(articles => {
+              self.articledata = articles.data.data
+              self.downvotearticleid = ''
+              self.commentslist = articles.data.data.commentsList
+              self.newcomment = ''
+              this.$router.push({ path: `/articles/${self.id}` })
+            })
+            .catch(error => {
+              console.log('ERROR: ', error)
+            })
+        })
+        .catch(error => {
+          console.log('ERROR: ', error)
+        })
     }
   },
   created () { // purposefully added to handle first time detail clicked
@@ -215,6 +297,8 @@ export default {
       url: `http://localhost:3000/articles/details/${self.id}`
     })
       .then(result => {
+        // console.log('HASIL-->', result.data)
+        // console.log('comment -->', result.data.data.commentsList)
         self.articledata = result.data.data
         self.commentslist = result.data.data.commentsList
       })
