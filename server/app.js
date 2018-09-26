@@ -5,7 +5,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/hacktivoverflow',{ useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost:27017/hacktivoverflow',{ useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_USER, { useNewUrlParser : true});
 
 app.use(express.urlencoded({ extended : false}));
 app.use(express.json());
@@ -27,5 +28,5 @@ app.get('/',(req,res)=>{
 })
 
 app.listen( process.env.PORT,() => {
-    console.log('You are listening to PORT 3000')
+    console.log('You are listening to PORT'+process.env.PORT)
 })
