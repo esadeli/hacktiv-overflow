@@ -184,7 +184,7 @@ export default {
       let self = this
       axios({
         method: 'POST',
-        url: 'http://localhost:3000/users/login',
+        url: 'http://35.197.145.160/users/login',
         data: {
           email: self.email,
           password: self.password
@@ -195,7 +195,7 @@ export default {
           // get user credentials
           axios({
             method: 'GET',
-            url: 'http://localhost:3000/users/details',
+            url: 'http://35.197.145.160/users/details',
             headers: {
               token: jwttoken
             }
@@ -235,7 +235,7 @@ export default {
       //   console.log('Data awal-->', self.namelengkap, self.email, self.password)
       axios({
         method: 'POST',
-        url: 'http://localhost:3000/users/register',
+        url: 'http://35.197.145.160/users/register',
         data: {
           name: self.namelengkap,
           email: self.email,
@@ -248,7 +248,7 @@ export default {
           // get user credentials
           axios({
             method: 'GET',
-            url: 'http://localhost:3000/users/details',
+            url: 'http://35.197.145.160/users/details',
             headers: {
               token: jwttoken
             }

@@ -157,7 +157,7 @@ export default {
         let self = this
         axios({
           method: 'delete',
-          url: `http://localhost:3000/articles/delete/${self.id}`,
+          url: `http://35.197.145.160//articles/delete/${self.id}`,
           headers: {
             token: self.token
           }
@@ -176,7 +176,7 @@ export default {
       let self = this
       axios({
         method: 'POST',
-        url: `http://localhost:3000/comments`,
+        url: `http://35.197.145.160/comments`,
         headers: {
           token: self.token
         },
@@ -189,7 +189,7 @@ export default {
           // get the updated comment
           axios({
             method: 'GET',
-            url: `http://localhost:3000/articles/details/${self.id}`
+            url: `http://35.197.145.160/articles/details/${self.id}`
           })
             .then(articles => {
               self.commentslist = articles.data.data.commentsList
@@ -218,7 +218,7 @@ export default {
       let self = this
       axios({
         method: 'PUT',
-        url: `http://localhost:3000/comments/edit/${commentId}`,
+        url: `http://35.197.145.160/comments/edit/${commentId}`,
         headers: {
           token: self.token
         },
@@ -230,7 +230,7 @@ export default {
           // get the updated comment
           axios({
             method: 'GET',
-            url: `http://localhost:3000/articles/details/${self.id}`
+            url: `http://35.197.145.160/articles/details/${self.id}`
           })
             .then(articles => {
               self.commentslist = articles.data.data.commentsList
@@ -255,7 +255,7 @@ export default {
       let self = this
       axios({
         method: 'POST',
-        url: `http://localhost:3000/articles/details/${self.id}/upvote`,
+        url: `http://35.197.145.160/articles/details/${self.id}/upvote`,
         headers: {
           token: self.token
         }
@@ -264,7 +264,7 @@ export default {
           // get the updated article
           axios({
             method: 'GET',
-            url: `http://localhost:3000/articles/details/${self.id}`
+            url: `http://35.197.145.160/articles/details/${self.id}`
           })
             .then(articles => {
               self.articledata = articles.data.data
@@ -288,7 +288,7 @@ export default {
       let self = this
       axios({
         method: 'POST',
-        url: `http://localhost:3000/articles/details/${self.id}/downvote`,
+        url: `http://35.197.145.160/articles/details/${self.id}/downvote`,
         headers: {
           token: self.token
         }
@@ -297,7 +297,7 @@ export default {
           // get the updated article
           axios({
             method: 'GET',
-            url: `http://localhost:3000/articles/details/${self.id}`
+            url: `http://35.197.145.160/articles/details/${self.id}`
           })
             .then(articles => {
               self.articledata = articles.data.data
@@ -321,7 +321,7 @@ export default {
       let self = this
       axios({
         method: 'POST',
-        url: `http://localhost:3000/comments/upvote/${self.upvotecommentid}`,
+        url: `http://35.197.145.160/comments/upvote/${self.upvotecommentid}`,
         headers: {
           token: self.token
         }
@@ -330,7 +330,7 @@ export default {
           // get the updated article
           axios({
             method: 'GET',
-            url: `http://localhost:3000/articles/details/${self.id}`
+            url: `http://35.197.145.160/articles/details/${self.id}`
           })
             .then(articles => {
               self.articledata = articles.data.data
@@ -354,7 +354,7 @@ export default {
       let self = this
       axios({
         method: 'POST',
-        url: `http://localhost:3000/comments/downvote/${self.downvotecommentid}`,
+        url: `http://35.197.145.160/comments/downvote/${self.downvotecommentid}`,
         headers: {
           token: self.token
         }
@@ -363,7 +363,7 @@ export default {
           // get the updated article
           axios({
             method: 'GET',
-            url: `http://localhost:3000/articles/details/${self.id}`
+            url: `http://35.197.145.160/articles/details/${self.id}`
           })
             .then(articles => {
               self.articledata = articles.data.data
@@ -386,7 +386,7 @@ export default {
     let self = this
     axios({
       method: 'GET',
-      url: `http://localhost:3000/articles/details/${self.id}`
+      url: `http://35.197.145.160/articles/details/${self.id}`
     })
       .then(result => {
         self.articledata = result.data.data
@@ -404,7 +404,7 @@ export default {
       let self = this
       axios({
         method: 'GET',
-        url: `http://localhost:3000/articles/details/${this.articleid}`
+        url: `http://35.197.145.160/articles/details/${this.articleid}`
       })
         .then(result => {
           self.articledata = result.data.data

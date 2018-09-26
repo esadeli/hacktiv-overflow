@@ -66,7 +66,7 @@ export default {
         let self = this
         axios({
           method: 'POST',
-          url: 'http://localhost:3000/articles/search',
+          url: 'http://35.197.145.160/articles/search',
           data: {
             keyword: self.search
           }
@@ -85,7 +85,7 @@ export default {
     // get list of articles
     axios({
       method: 'GET',
-      url: 'http://localhost:3000/articles/lists'
+      url: 'http://35.197.145.160/articles/lists'
     })
       .then(result => {
         self.articleslist = result.data.data
