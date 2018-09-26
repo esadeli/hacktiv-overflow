@@ -49,7 +49,7 @@ class ArticleController{
 
     // get list of articles
     static getListOfArticles(req,res){
-        Article.find({}).populate('commentsList') //.populate('upVotesList').populate('downVotesList')
+        Article.find({}).populate('commentsList').populate('upVotesList').populate('downVotesList')
             .then(articles=>{
                 res.status(200).json({
                     msg : 'List of articles',
@@ -63,7 +63,7 @@ class ArticleController{
 
     // get one article
     static getOneArticle(req,res){
-        Article.findOne({_id : req.params.id}).populate('commentsList') //.populate('upVotesList').populate('downVotesList')
+        Article.findOne({_id : req.params.id}).populate('commentsList').populate('upVotesList').populate('downVotesList')
             .then(article =>{
                 res.status(200).json({ 
                     msg : 'Detail of article',

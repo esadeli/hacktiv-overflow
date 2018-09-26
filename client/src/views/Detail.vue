@@ -8,11 +8,21 @@
                         <br/>
                         <div class="row" v-if= "token !== ''">
                           <div class="col-md-2">
-                               <button type="button" class="btn btn-success" v-on:click= "upvotearticle()">Upvote</button>
+                              <div v-if= "articledata.userId !== userid ">
+                                <button type="button" class="btn btn-success" v-on:click= "upvotearticle()">Upvote</button>
+                              </div>
+                              <div v-else-if= "articledata.userId === userid ">
+                                <button type="button" class="btn btn-info" >Upvote</button>
+                              </div>
                                {{ articledata.upVotesList.length }}
                             </div>
                             <div class="col-md-3">
-                               <button type="button" class="btn btn-danger" v-on:click= "downvotearticle()">Downvote</button>
+                              <div v-if= "articledata.userId !== userid ">
+                                <button type="button" class="btn btn-danger" v-on:click= "downvotearticle()">Downvote</button>
+                              </div>
+                              <div v-else-if= "articledata.userId === userid ">
+                                <button type="button" class="btn btn-info" >Downvote</button>
+                              </div>
                               {{ articledata.downVotesList.length }}
                             </div>
                         </div>
@@ -43,14 +53,34 @@
                 </h3>
                 <hr>
                 <div v-if= "commentslist.length !== 0">
-                  <ul class="list-group" v-for="(comment,index) in commentslist" :key="index">
-                     <li class="list-group-item">
+                  <ul class="list-group" >
+                     <li class="list-group-item" v-for="(comment,index) in commentslist" :key="index">
                         <div v-if = "comment._id != editcommentid && editcommentstatus === false">
                             <div class="row">
                               <div class="col-md-2">
                                 <span class="badge badge-secondary">{{ comment.userfullname }} </span>
                               </div>
-                              <div class="col-md-7">
+                              <div class="col-md-3">
+                                <div v-if= "token !== '' " >
+                                  <div v-if= "comment.userIdComment === userid && token !== ''" >
+                                    <span class="badge badge-info">Upvote:</span>
+                                  </div>
+                                  <div v-else-if= "comment.userIdComment !== userid && token !== ''">
+                                    <button type="button" class="btn btn-success" v-on:click= "upvotecomment(comment._id)">Upvote</button>
+                                  </div>
+                                  {{ comment.commentUpVotes.length }}
+                                </div>
+                                <div v-if= "token !== '' ">
+                                    <div v-if= "articledata.userId === userid ">
+                                      <span class="badge badge-info">Downvote:</span>
+                                    </div>
+                                    <div v-else-if= "comment.userIdComment !== userid ">
+                                      <button type="button" class="btn btn-danger" v-on:click= "downvotecomment(comment._id)">Downvote</button>
+                                    </div>
+                                    {{ comment.commentDownVotes.length }}
+                                </div>
+                              </div>
+                              <div class="col-md-4">
                                   {{ comment.content }}
                               </div>
                               <div class="col-md-1">
@@ -186,7 +216,6 @@ export default {
     editcomment (input) {
       let commentId = input
       let self = this
-      // console.log('Ini id comment--->', input)
       axios({
         method: 'PUT',
         url: `http://localhost:3000/comments/edit/${commentId}`,
@@ -213,19 +242,17 @@ export default {
               this.$router.push({ path: `/articles/${self.id}` })
             })
             .catch(error => {
-              console.log('ERROR: TEST1', error)
+              console.log('ERROR: ', error)
             })
         })
         .catch(error => {
-          console.log('ERROR: TEST2', error)
+          console.log('ERROR: ', error)
         })
     },
     // upvote article
     upvotearticle () {
       this.upvotearticleid = this.userid
       let self = this
-      console.log('User Upvote -->', this.upvotearticleid)
-
       axios({
         method: 'POST',
         url: `http://localhost:3000/articles/details/${self.id}/upvote`,
@@ -259,7 +286,6 @@ export default {
     downvotearticle () {
       this.downvotearticleid = this.userid
       let self = this
-      console.log('User Downvote -->', this.downvotearticleid)
       axios({
         method: 'POST',
         url: `http://localhost:3000/articles/details/${self.id}/downvote`,
@@ -287,6 +313,72 @@ export default {
         .catch(error => {
           console.log('ERROR: ', error)
         })
+    },
+
+    // upvote comment
+    upvotecomment (input) {
+      this.upvotecommentid = input
+      let self = this
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/comments/upvote/${self.upvotecommentid}`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(downvote => {
+          // get the updated article
+          axios({
+            method: 'GET',
+            url: `http://localhost:3000/articles/details/${self.id}`
+          })
+            .then(articles => {
+              self.articledata = articles.data.data
+              self.upvotecommentid = ''
+              self.commentslist = articles.data.data.commentsList
+              self.newcomment = ''
+              this.$router.push({ path: `/articles/${self.id}` })
+            })
+            .catch(error => {
+              console.log('ERROR: ', error)
+            })
+        })
+        .catch(error => {
+          console.log('ERROR: ', error)
+        })
+    },
+
+    // downvote comment
+    downvotecomment (input) {
+      this.downvotecommentid = input
+      let self = this
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/comments/downvote/${self.downvotecommentid}`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(downvote => {
+          // get the updated article
+          axios({
+            method: 'GET',
+            url: `http://localhost:3000/articles/details/${self.id}`
+          })
+            .then(articles => {
+              self.articledata = articles.data.data
+              self.upvotecommentid = ''
+              self.commentslist = articles.data.data.commentsList
+              self.newcomment = ''
+              this.$router.push({ path: `/articles/${self.id}` })
+            })
+            .catch(error => {
+              console.log('ERROR: ', error)
+            })
+        })
+        .catch(error => {
+          console.log('ERROR: ', error)
+        })
     }
   },
   created () { // purposefully added to handle first time detail clicked
@@ -297,8 +389,6 @@ export default {
       url: `http://localhost:3000/articles/details/${self.id}`
     })
       .then(result => {
-        // console.log('HASIL-->', result.data)
-        // console.log('comment -->', result.data.data.commentsList)
         self.articledata = result.data.data
         self.commentslist = result.data.data.commentsList
       })
