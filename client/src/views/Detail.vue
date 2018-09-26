@@ -35,18 +35,36 @@
                 <div v-if= "commentslist.length !== 0">
                   <ul class="list-group" v-for="(comment,index) in commentslist" :key="index">
                      <li class="list-group-item">
-                        <div class="row">
-                          <div class="col-md-2">
-                            <span class="badge badge-secondary">{{ comment.userfullname }} </span>
-                          </div>
-                          <div class="col-md-7">
-                            {{ comment.content }}
-                          </div>
-                          <div class="col-md-1">
-                            <div v-if= "comment.userIdComment == userid && token !== '' ">
-                              <button type="button" class="btn btn-warning" v-on:click= "editcomment(comment._id)">Edit Comment</button>
+                        <div v-if = "comment._id != editcommentid && editcommentstatus === false">
+                            <div class="row">
+                              <div class="col-md-2">
+                                <span class="badge badge-secondary">{{ comment.userfullname }} </span>
+                              </div>
+                              <div class="col-md-7">
+                                  {{ comment.content }}
+                              </div>
+                              <div class="col-md-1">
+                                <div v-if= "comment.userIdComment == userid && token !== '' && editcommentstatus === false ">
+                                  <button type="button" class="btn btn-warning" v-on:click= "changeeditcommentstatus(comment._id, comment.content)">Edit Comment</button>
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                        </div>
+                        <div v-else-if= "comment.userIdComment == userid && token !== '' && comment._id == editcommentid && editcommentstatus === true">
+                           <div class= "row">
+                              <div class="col-md-2">
+                                <span class="badge badge-secondary">{{ comment.userfullname }} </span>
+                              </div>
+                              <div class= "col-md-10">
+                                <form>
+                                   <div class="form-group">
+                                      <label for="exampleInputEmail1">Topic</label>
+                                      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model= "editcommentcontent" placeholder="Answer">
+                                  </div>
+                                  <button type="button" class="btn btn-primary" v-on:click= "editcomment(comment._id)">Edit Answer</button>
+                                </form>
+                              </div>
+                           </div>
                         </div>
                      </li>
                   </ul>
@@ -55,12 +73,12 @@
                    <p>No answers available</p>
                 </div>
                 <hr>
-                <div v-if= "token !== '' && userid !== ''">
+                <div v-if= "token !== '' && userid !== '' && editcommentstatus === false">
                    <h4>Answers</h4>
                     <form>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Answer</label>
-                            <textarea class="form-control" rows="5" id="comment" placeholder="tell your story here" v-model= "newcomment"></textarea>
+                            <textarea class="form-control" rows="5" id="comment" placeholder="give him/her a clue" v-model= "newcomment"></textarea>
                         </div>
                         <button type="button" class="btn btn-primary" v-on:click= "addcomment()">Save</button>
                     </form>
@@ -80,7 +98,10 @@ export default {
       articleid: '',
       articledata: {},
       commentslist: [],
-      newcomment: ''
+      newcomment: '',
+      editcommentstatus: false,
+      editcommentid: '',
+      editcommentcontent: ''
     }
   },
   methods: {
@@ -140,16 +161,26 @@ export default {
         })
     },
 
+    // edit comment status
+    changeeditcommentstatus (id, content) {
+      this.editcommentid = id
+      this.editcommentcontent = content
+      this.editcommentstatus = true
+    },
+
     // edit comment
     editcomment (input) {
       let commentId = input
       let self = this
       // console.log('Ini id comment--->', input)
       axios({
-        method: 'delete',
+        method: 'PUT',
         url: `http://localhost:3000/comments/edit/${commentId}`,
         headers: {
           token: self.token
+        },
+        data: {
+          content: self.editcommentcontent
         }
       })
         .then(comment => {
@@ -160,6 +191,11 @@ export default {
           })
             .then(articles => {
               self.commentslist = articles.data.data.commentsList
+              // reset edit comment parameter
+              self.editcommentid = ''
+              self.editcommentcontent = ''
+              self.editcommentstatus = false
+              // revert back to detail article view
               this.$router.push({ path: `/articles/${self.id}` })
             })
             .catch(error => {
