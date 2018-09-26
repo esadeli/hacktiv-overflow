@@ -66,7 +66,7 @@ export default {
         let self = this
         axios({
           method: 'POST',
-          url: 'http://35.240.143.130/articles/search',
+          url: 'http://localhost:3000/articles/search',
           data: {
             keyword: self.search
           }
@@ -85,27 +85,10 @@ export default {
     // get list of articles
     axios({
       method: 'GET',
-      url: 'http://35.240.143.130/articles/lists'
+      url: 'http://localhost:3000/articles/lists'
     })
       .then(result => {
         self.articleslist = result.data.data
-      })
-      .catch(error => {
-        console.log('ERROR: ', error)
-      })
-
-    // get random quote
-    axios({
-      method: 'GET',
-      url: 'http://quotesondesign.com/wp-json/posts?filter[orderby]=rand'
-    })
-      .then(quote => {
-        self.quote = quote.data[0].content
-        self.quotelink = quote.data[0].link
-        // console.log('QUOTE--->',quote.data[0])
-        $('#quotesection').append(`
-            <a href="${self.quotelink}" target = "_blank" style = "color: black">${self.quote}</a>
-        `)
       })
       .catch(error => {
         console.log('ERROR: ', error)

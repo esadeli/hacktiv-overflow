@@ -13,6 +13,8 @@
 </template>
 <script>
 import Navbar from '@/components/Navbar.vue'
+// import Article from '@/views/Article.vue'
+
 export default {
   data () {
     return {

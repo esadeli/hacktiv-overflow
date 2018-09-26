@@ -13,10 +13,10 @@ export default new Vuex.Store({
     changeText (state, payload) {
       state.text = payload
     },
-    setToken (state, payload) {
+    getToken (state, payload) {
       state.token = payload
     },
-    setNameLengkap (state, payload) {
+    getNameLengkap (state, payload) {
       state.namelengkap = payload
     }
   },
@@ -24,10 +24,10 @@ export default new Vuex.Store({
     changeText (context, payload) {
       context.commit('changeText', payload)
     },
-    setToken (context, payload) {
+    getToken (context, payload) {
       context.commit('getToken', payload)
     },
-    setNameLengkap (context, payload) {
+    getNameLengkap (context, payload) {
       context.commit('getNameLengkap', payload)
     }
   }

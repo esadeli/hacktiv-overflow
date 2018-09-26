@@ -29,7 +29,7 @@
                 <br/>
                 <br/>
                 <h3>
-                  <span class="badge badge-secondary">Commentary Section: </span>
+                  <span class="badge badge-secondary">Answer Section: </span>
                 </h3>
                 <hr>
                 <div v-if= "commentslist.length !== 0">
@@ -44,7 +44,7 @@
                           </div>
                           <div class="col-md-1">
                             <div v-if= "comment.userIdComment == userid && token !== '' ">
-                              <button type="button" class="btn btn-danger" v-on:click= "deletecomment(comment._id)">Delete Comment</button>
+                              <button type="button" class="btn btn-warning" v-on:click= "editcomment(comment._id)">Edit Comment</button>
                             </div>
                           </div>
                         </div>
@@ -52,17 +52,17 @@
                   </ul>
                 </div>
                 <div v-else>
-                   <p>No comments available</p>
+                   <p>No answers available</p>
                 </div>
                 <hr>
                 <div v-if= "token !== '' && userid !== ''">
-                   <h4>Add comment</h4>
+                   <h4>Answers</h4>
                     <form>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Comment</label>
+                            <label for="exampleInputPassword1">Answer</label>
                             <textarea class="form-control" rows="5" id="comment" placeholder="tell your story here" v-model= "newcomment"></textarea>
                         </div>
-                        <button type="button" class="btn btn-primary" v-on:click= "addcomment()">Add Comment</button>
+                        <button type="button" class="btn btn-primary" v-on:click= "addcomment()">Save</button>
                     </form>
                 </div>
             </div>
@@ -85,91 +85,91 @@ export default {
   },
   methods: {
     // delete individual article
-    // deletearticle () {
-    //   // Note: it's not necessary to put this validation since we have hide the button
-    //   // yet double validation is better
-    //   if (this.articledata.userId === this.userid) {
-    //     let self = this
-    //     axios({
-    //       method: 'delete',
-    //       url: `http://localhost:3000/articles/delete/${self.id}`,
-    //       headers: {
-    //         token: self.token
-    //       }
-    //     })
-    //       .then(article => {
-    //         this.$router.push({ path: '/articles' })
-    //       })
-    //       .catch(error => {
-    //         console.log('ERROR: ', error)
-    //       })
-    //   }
-    // },
+    deletearticle () {
+      // Note: it's not necessary to put this validation since we have hide the button
+      // yet double validation is better
+      if (this.articledata.userId === this.userid) {
+        let self = this
+        axios({
+          method: 'delete',
+          url: `http://localhost:3000/articles/delete/${self.id}`,
+          headers: {
+            token: self.token
+          }
+        })
+          .then(article => {
+            this.$router.push({ path: '/articles' })
+          })
+          .catch(error => {
+            console.log('ERROR: ', error)
+          })
+      }
+    },
 
     // add new comment
-    // addcomment () {
-    //   let self = this
-    //   axios({
-    //     method: 'POST',
-    //     url: `http://35.240.143.130/comments`,
-    //     headers: {
-    //       token: self.token
-    //     },
-    //     data: {
-    //       content: self.newcomment,
-    //       articleId: self.id
-    //     }
-    //   })
-    //     .then(comment => {
-    //       // get the updated comment
-    //       axios({
-    //         method: 'GET',
-    //         url: `http://localhost:3000/articles/details/${self.id}`
-    //       })
-    //         .then(articles => {
-    //           self.commentslist = articles.data.data.commentsList
-    //           self.newcomment = ''
-    //           this.$router.push({ path: `/articles/${self.id}` })
-    //         })
-    //         .catch(error => {
-    //           console.log('ERROR: ', error)
-    //         })
-    //     })
-    //     .catch(error => {
-    //       console.log('ERROR: ', error)
-    //     })
-    // },
+    addcomment () {
+      let self = this
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/comments`,
+        headers: {
+          token: self.token
+        },
+        data: {
+          content: self.newcomment,
+          articleId: self.id
+        }
+      })
+        .then(comment => {
+          // get the updated comment
+          axios({
+            method: 'GET',
+            url: `http://localhost:3000/articles/details/${self.id}`
+          })
+            .then(articles => {
+              self.commentslist = articles.data.data.commentsList
+              self.newcomment = ''
+              this.$router.push({ path: `/articles/${self.id}` })
+            })
+            .catch(error => {
+              console.log('ERROR: ', error)
+            })
+        })
+        .catch(error => {
+          console.log('ERROR: ', error)
+        })
+    },
 
-    // delete comment
-    // deletecomment (input) {
-    //   let commentId = input
-    //   let self = this
-    //   // console.log('Ini id comment--->', input)
-    //   axios({
-    //     method: 'delete',
-    //     url: `http://localhost:3000/comments/delete/${commentId}`,
-    //     headers: {
-    //       token: self.token
-    //     }
-    //   })
-    //     .then(comment => {
-    //       // get the updated comment
-    //       axios({
-    //         method: 'GET',
-    //         url: `http://localhost:3000/articles/details/${self.id}`
-    //       })
-    //         .then(articles => {
-    //           self.commentslist = articles.data.data.commentsList
-    //           this.$router.push({ path: `/articles/${self.id}` })
-    //         })
-    //         .catch(error => {
-    //           console.log('ERROR: ', error)
-    //         })
-    //     })
-    //     .catch(error => {
-    //       console.log('ERROR: ', error)
-    //     })
-    // }
+    // edit comment
+    editcomment (input) {
+      let commentId = input
+      let self = this
+      // console.log('Ini id comment--->', input)
+      axios({
+        method: 'delete',
+        url: `http://localhost:3000/comments/edit/${commentId}`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(comment => {
+          // get the updated comment
+          axios({
+            method: 'GET',
+            url: `http://localhost:3000/articles/details/${self.id}`
+          })
+            .then(articles => {
+              self.commentslist = articles.data.data.commentsList
+              this.$router.push({ path: `/articles/${self.id}` })
+            })
+            .catch(error => {
+              console.log('ERROR: TEST1', error)
+            })
+        })
+        .catch(error => {
+          console.log('ERROR: TEST2', error)
+        })
+    }
   },
   created () { // purposefully added to handle first time detail clicked
     // get data

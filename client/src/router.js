@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+// import Home from './views/Home.vue'
 import Detail from './views/Detail.vue'
 import Article from './views/Article.vue'
 import AllArticles from './views/AllArticles.vue'
+import FormArticle from './views/FormArticle.vue'
+import EditForm from './views/EditForm.vue'
 
 Vue.use(Router)
 
@@ -14,7 +16,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Article
     },
     {
       path: '/about',
@@ -38,6 +40,17 @@ export default new Router({
           path: ':id',
           name: 'id',
           component: Detail,
+          props: true
+        },
+        {
+          path: '/articles/add',
+          name: 'addarticle',
+          component: FormArticle
+        },
+        {
+          path: 'edit/:id',
+          name: 'editarticle',
+          component: EditForm,
           props: true
         }]
     }
